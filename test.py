@@ -1,8 +1,10 @@
 import time
 from random import randint
+import sys
+
 import cassandra
 from cassandra.cluster import Cluster
-import sys
+
 
 if len(sys.argv) < 2:
     print "You must provide the metric name"
@@ -35,7 +37,7 @@ for i in range(10):
     session.execute("INSERT INTO timeseries.data_points (metric_name, time, value)\
         VALUES('%s', %d, %d);" % (metricName, int(round(time.time() * 1000)), randint(0, 10)))
 
-results = session.execute("""SELECT * FROM timeseries.data_points""")
+results = session.execute("""SELECT * FROM timeseries.data_points LIMIT 50""")
 
 print "%-15s\t%-25s\t%-20s\n%s" % \
       ("Name", "Timestamp", "Value",
